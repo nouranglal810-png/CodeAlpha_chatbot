@@ -1,17 +1,18 @@
 /* ============================================
-   SmartBot — 3D Professional Dark Theme
+   SmartBot — 3D Professional Dark Theme v2
+   Real 3D depth, mouse-tracking, particles
    ============================================ */
 
 /* --- Design Tokens --- */
 :root {
-    --bg-void: #06060b;
-    --bg-deep: #0c0c14;
-    --bg-card: rgba(14, 14, 24, 0.82);
-    --bg-elevated: rgba(20, 20, 35, 0.85);
+    --bg-void: #050508;
+    --bg-deep: #0a0a12;
+    --bg-card: rgba(12, 12, 20, 0.88);
+    --bg-elevated: rgba(16, 16, 28, 0.9);
     --bg-input: rgba(255, 255, 255, 0.03);
 
     --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-active: rgba(130, 100, 255, 0.35);
+    --border-active: rgba(139, 92, 246, 0.4);
 
     --text-100: #f0f0f8;
     --text-200: #c0c0d0;
@@ -25,26 +26,16 @@
     --pink: #ec4899;
     --red: #ef4444;
 
-    --glow-purple: rgba(139, 92, 246, 0.25);
-    --glow-blue: rgba(99, 102, 241, 0.2);
-
     --gradient-main: linear-gradient(135deg, #8b5cf6, #6366f1, #06b6d4);
     --gradient-user: linear-gradient(135deg, #7c3aed, #4f46e5);
-    --gradient-subtle: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(99, 102, 241, 0.08));
 
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-    --shadow-3d: 
-        0 1px 2px rgba(0,0,0,0.3),
-        0 4px 8px rgba(0,0,0,0.25),
-        0 12px 24px rgba(0,0,0,0.2),
-        0 24px 48px rgba(0,0,0,0.15);
     --shadow-card:
-        0 2px 4px rgba(0,0,0,0.4),
-        0 8px 16px rgba(0,0,0,0.3),
-        0 24px 48px rgba(0,0,0,0.25),
-        0 48px 96px rgba(0,0,0,0.15);
-    --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.04);
+        0 4px 6px rgba(0,0,0,0.4),
+        0 10px 20px rgba(0,0,0,0.3),
+        0 30px 60px rgba(0,0,0,0.25),
+        0 50px 100px rgba(0,0,0,0.15);
 
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -56,7 +47,6 @@
 html {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -69,33 +59,38 @@ body {
 }
 
 /* ============================================
-   Background Layers
+   BACKGROUND — Animated Gradient Mesh
    ============================================ */
 
 .bg-mesh {
     position: fixed;
     inset: 0;
-    background: 
-        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(139, 92, 246, 0.08), transparent),
-        radial-gradient(ellipse 60% 50% at 80% 90%, rgba(6, 182, 212, 0.06), transparent),
-        radial-gradient(ellipse 70% 40% at 50% 50%, rgba(99, 102, 241, 0.04), transparent);
     z-index: 0;
+    background:
+        radial-gradient(ellipse 80% 50% at 15% 20%, rgba(139, 92, 246, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 85% 80%, rgba(6, 182, 212, 0.10), transparent),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(99, 102, 241, 0.06), transparent);
+    animation: mesh-shift 12s ease-in-out infinite alternate;
 }
 
+@keyframes mesh-shift {
+    0%   { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(25deg); }
+}
+
+/* Subtle dot grid */
 .bg-grid {
     position: fixed;
     inset: 0;
-    background-image: 
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 60px 60px;
     z-index: 0;
-    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 10%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 10%, transparent 70%);
 }
 
 /* ============================================
-   App Container + 3D Perspective
+   APP CONTAINER — 3D Perspective Stage
    ============================================ */
 
 .app-container {
@@ -104,13 +99,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    perspective: 1200px;
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
     position: relative;
     z-index: 1;
 }
 
 /* ============================================
-   Floating 3D Orbs
+   FLOATING 3D ORBS — Big visible glowing orbs
    ============================================ */
 
 .orb {
@@ -121,116 +117,134 @@ body {
 }
 
 .orb-1 {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, var(--purple), transparent 70%);
-    filter: blur(100px);
-    opacity: 0.3;
-    top: -5%; left: -3%;
-    animation: orbit-1 22s ease-in-out infinite;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle at 40% 40%,
+        rgba(139, 92, 246, 0.5),
+        rgba(139, 92, 246, 0.15) 50%,
+        transparent 70%);
+    filter: blur(30px);
+    top: -8%; left: -4%;
+    animation: float-1 16s ease-in-out infinite;
 }
 
 .orb-2 {
-    width: 250px; height: 250px;
-    background: radial-gradient(circle, var(--cyan), transparent 70%);
-    filter: blur(90px);
-    opacity: 0.2;
-    bottom: -5%; right: -3%;
-    animation: orbit-2 28s ease-in-out infinite;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle at 60% 60%,
+        rgba(6, 182, 212, 0.45),
+        rgba(6, 182, 212, 0.1) 50%,
+        transparent 70%);
+    filter: blur(25px);
+    bottom: -6%; right: -3%;
+    animation: float-2 20s ease-in-out infinite;
 }
 
 .orb-3 {
-    width: 180px; height: 180px;
-    background: radial-gradient(circle, var(--pink), transparent 70%);
-    filter: blur(80px);
-    opacity: 0.15;
-    top: 60%; left: 15%;
-    animation: orbit-3 18s ease-in-out infinite;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle,
+        rgba(236, 72, 153, 0.35),
+        transparent 70%);
+    filter: blur(25px);
+    top: 55%; left: 8%;
+    animation: float-3 14s ease-in-out infinite;
 }
 
 .orb-4 {
-    width: 120px; height: 120px;
-    background: radial-gradient(circle, var(--emerald), transparent 70%);
-    filter: blur(60px);
-    opacity: 0.12;
-    top: 20%; right: 15%;
-    animation: orbit-4 24s ease-in-out infinite;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle,
+        rgba(16, 185, 129, 0.3),
+        transparent 70%);
+    filter: blur(20px);
+    top: 15%; right: 10%;
+    animation: float-4 18s ease-in-out infinite;
 }
 
-@keyframes orbit-1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(50px, 40px) scale(1.1); }
-    66% { transform: translate(-30px, 50px) scale(0.9); }
+/* --- Orb float animations with 3D movement --- */
+@keyframes float-1 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    25%  { transform: translate3d(60px, 40px, 30px) scale(1.15); }
+    50%  { transform: translate3d(-20px, 80px, -20px) scale(0.9); }
+    75%  { transform: translate3d(40px, -10px, 40px) scale(1.05); }
+    100% { transform: translate3d(0, 0, 0) scale(1); }
 }
-@keyframes orbit-2 {
-    0%, 100% { transform: translate(0, 0); }
-    33% { transform: translate(-40px, -30px); }
-    66% { transform: translate(30px, -50px); }
+
+@keyframes float-2 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    25%  { transform: translate3d(-50px, -50px, 20px) scale(1.1); }
+    50%  { transform: translate3d(40px, -20px, -30px) scale(0.95); }
+    75%  { transform: translate3d(-30px, 40px, 10px) scale(1.08); }
+    100% { transform: translate3d(0, 0, 0) scale(1); }
 }
-@keyframes orbit-3 {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    50% { transform: translate(40px, -30px) rotate(180deg); }
+
+@keyframes float-3 {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    33%  { transform: translate3d(50px, -40px, 25px) rotate(120deg); }
+    66%  { transform: translate3d(-30px, 30px, -15px) rotate(240deg); }
 }
-@keyframes orbit-4 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-30px, 40px); }
+
+@keyframes float-4 {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50%  { transform: translate3d(-40px, 50px, 30px); }
 }
 
 /* ============================================
-   3D Chat Card (Outer wrapper for depth)
+   3D CHAT CARD — Real depth + tilt
    ============================================ */
 
 .chat-card {
     position: relative;
     transform-style: preserve-3d;
-    transform: rotateX(1deg) rotateY(-0.5deg);
-    transition: transform 0.6s var(--ease-out-expo);
+    transition: transform 0.1s ease-out;
     z-index: 2;
 }
 
-.chat-card:hover {
-    transform: rotateX(0deg) rotateY(0deg) translateZ(8px);
-}
-
-/* Glow behind the card */
+/* Glow layer behind card */
 .chat-card-glow {
     position: absolute;
-    inset: -2px;
-    border-radius: 26px;
+    inset: -4px;
+    border-radius: 28px;
     background: var(--gradient-main);
-    opacity: 0.12;
-    filter: blur(20px);
+    opacity: 0.15;
+    filter: blur(12px);
     z-index: -1;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    animation: glow-breathe 4s ease-in-out infinite;
+}
+
+@keyframes glow-breathe {
+    0%, 100% { opacity: 0.12; filter: blur(12px); }
+    50%      { opacity: 0.22; filter: blur(16px); }
 }
 
 .chat-card:hover .chat-card-glow {
-    opacity: 0.2;
+    opacity: 0.3;
+    filter: blur(18px);
 }
 
 /* ============================================
-   Chat Container (Glass)
+   CHAT CONTAINER — Glass + 3D
    ============================================ */
 
 .chat-container {
-    width: 100%;
-    max-width: 500px;
     width: 500px;
+    max-width: 500px;
     height: 90vh;
     max-height: 780px;
     display: flex;
     flex-direction: column;
     background: var(--bg-card);
-    backdrop-filter: blur(40px) saturate(1.3);
-    -webkit-backdrop-filter: blur(40px) saturate(1.3);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
     border: 1px solid var(--border-subtle);
     border-radius: 24px;
-    box-shadow: var(--shadow-card), var(--shadow-inset);
+    box-shadow: var(--shadow-card);
     overflow: hidden;
     transform-style: preserve-3d;
+    /* Top highlight edge for 3D look */
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 /* ============================================
-   Header
+   HEADER — With shimmer line
    ============================================ */
 
 .chat-header {
@@ -242,16 +256,28 @@ body {
     border-bottom: 1px solid var(--border-subtle);
     flex-shrink: 0;
     position: relative;
+    overflow: hidden;
 }
 
-/* Gradient line at bottom of header */
+/* Animated gradient line under header */
 .chat-header::after {
     content: '';
     position: absolute;
     bottom: -1px; left: 0; right: 0;
     height: 2px;
-    background: var(--gradient-main);
-    opacity: 0.5;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--purple), 
+        var(--blue), 
+        var(--cyan), 
+        transparent);
+    background-size: 200% 100%;
+    animation: shimmer-line 3s linear infinite;
+}
+
+@keyframes shimmer-line {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 .header-left {
@@ -270,6 +296,7 @@ body {
     gap: 8px;
 }
 
+/* AI badge */
 .badge-ai {
     font-size: 0.55rem;
     font-weight: 700;
@@ -279,13 +306,18 @@ body {
     background: var(--gradient-main);
     color: #fff;
     text-transform: uppercase;
-    box-shadow: 0 2px 8px var(--glow-purple);
+    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+    animation: badge-glow 2s ease-in-out infinite alternate;
 }
 
-/* --- 3D Avatar --- */
+@keyframes badge-glow {
+    0%   { box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3); }
+    100% { box-shadow: 0 2px 18px rgba(139, 92, 246, 0.6); }
+}
+
+/* --- 3D Avatar with spinning ring --- */
 .bot-avatar-3d {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     position: relative;
     display: flex;
     align-items: center;
@@ -294,41 +326,47 @@ body {
 }
 
 .avatar-core {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     border-radius: 12px;
-    background: var(--bg-deep);
+    background: linear-gradient(145deg, #0f0f1a, #141428);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--purple);
     position: relative;
     z-index: 2;
-    box-shadow: 
-        0 2px 8px rgba(139, 92, 246, 0.2),
-        inset 0 1px 0 rgba(255,255,255,0.06);
-    border: 1px solid rgba(139, 92, 246, 0.25);
+    box-shadow:
+        0 3px 10px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 -1px 0 rgba(0,0,0,0.3);
+    border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 .avatar-ring {
     position: absolute;
-    inset: -2px;
+    inset: -3px;
     border-radius: 14px;
-    border: 1.5px solid var(--purple);
-    opacity: 0;
-    animation: ring-pulse 3s ease-out infinite;
+    border: 2px solid transparent;
+    border-top-color: var(--purple);
+    border-right-color: var(--cyan);
+    animation: spin-ring 3s linear infinite;
+    opacity: 0.7;
 }
 
 .avatar-ring.ring-2 {
-    animation-delay: 1.5s;
+    inset: -7px;
+    border-radius: 17px;
+    border-top-color: var(--cyan);
+    border-right-color: var(--pink);
+    animation: spin-ring 5s linear infinite reverse;
+    opacity: 0.35;
 }
 
-@keyframes ring-pulse {
-    0% { transform: scale(0.85); opacity: 0.5; }
-    100% { transform: scale(1.4); opacity: 0; }
+@keyframes spin-ring {
+    to { transform: rotate(360deg); }
 }
 
-/* --- Status Bar --- */
+/* --- Status bar --- */
 .status-bar {
     display: flex;
     align-items: center;
@@ -338,26 +376,39 @@ body {
 }
 
 .status-dot-3d {
-    width: 7px;
-    height: 7px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--emerald);
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6), 0 0 12px rgba(16, 185, 129, 0.2);
-    animation: pulse-glow 2s ease-in-out infinite;
+    position: relative;
+    animation: dot-pulse 2s ease-in-out infinite;
 }
 
-@keyframes pulse-glow {
-    0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
-    50% { opacity: 0.5; box-shadow: 0 0 3px rgba(16, 185, 129, 0.3); }
+.status-dot-3d::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: var(--emerald);
+    opacity: 0.3;
+    animation: dot-ripple 2s ease-out infinite;
+}
+
+@keyframes dot-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes dot-ripple {
+    0%   { transform: scale(0.8); opacity: 0.4; }
+    100% { transform: scale(2.2); opacity: 0; }
 }
 
 .status-text { color: var(--text-300); }
 .divider { color: var(--text-400); margin: 0 2px; }
 
-/* --- Icon Button --- */
+/* --- Icon button --- */
 .icon-btn {
-    width: 34px;
-    height: 34px;
+    width: 34px; height: 34px;
     border-radius: 10px;
     border: 1px solid var(--border-subtle);
     background: rgba(255,255,255,0.02);
@@ -366,21 +417,21 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s ease;
+    transition: all 0.3s var(--ease-spring);
 }
 
 .icon-btn:hover {
-    background: rgba(239, 68, 68, 0.08);
-    border-color: rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
     color: var(--red);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
 }
 
-.icon-btn:active { transform: translateY(0) scale(0.95); }
+.icon-btn:active { transform: translateY(0) scale(0.92); }
 
 /* ============================================
-   Messages Area
+   MESSAGES AREA
    ============================================ */
 
 .chat-messages {
@@ -393,34 +444,31 @@ body {
     scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
 .chat-messages::-webkit-scrollbar { width: 4px; }
 .chat-messages::-webkit-scrollbar-track { background: transparent; }
 .chat-messages::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.2);
+    background: rgba(139, 92, 246, 0.25);
     border-radius: 10px;
-}
-.chat-messages::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 92, 246, 0.4);
 }
 
 /* ============================================
-   Messages — 3D Depth
+   3D MESSAGES — Real depth
    ============================================ */
 
 .message {
     display: flex;
     gap: 10px;
-    animation: msg-enter 0.45s var(--ease-out-expo) forwards;
+    animation: msg-fly-in 0.5s var(--ease-out-expo) forwards;
     opacity: 0;
 }
 
-@keyframes msg-enter {
-    from { opacity: 0; transform: translateY(16px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes msg-fly-in {
+    0%   { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.92); }
+    60%  { opacity: 1; transform: translateY(-3px) translateZ(5px) scale(1.01); }
+    100% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
 }
 
-/* Small avatar in messages */
+/* Small avatar */
 .msg-avatar {
     width: 28px; height: 28px; min-width: 28px;
     border-radius: 9px;
@@ -432,10 +480,10 @@ body {
     color: var(--purple);
     margin-top: 2px;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-/* --- Bot Message (3D raised card) --- */
+/* --- Bot message (3D raised) --- */
 .bot-message {
     align-self: flex-start;
     max-width: 88%;
@@ -446,23 +494,27 @@ body {
     border: 1px solid var(--border-subtle);
     border-radius: 4px 16px 16px 16px;
     padding: 14px 16px;
-    box-shadow: 
-        0 1px 3px rgba(0,0,0,0.2),
-        0 4px 12px rgba(0,0,0,0.1),
-        var(--shadow-inset);
-    transition: all 0.25s ease;
+    box-shadow:
+        0 1px 2px rgba(0,0,0,0.3),
+        0 4px 8px rgba(0,0,0,0.15),
+        0 8px 24px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all 0.3s var(--ease-spring);
+    transform: translateZ(0);
 }
 
 .bot-message .msg-bubble:hover {
     border-color: var(--border-active);
-    transform: translateY(-1px);
-    box-shadow: 
-        0 2px 6px rgba(0,0,0,0.25),
-        0 8px 20px rgba(0,0,0,0.12),
-        0 0 0 1px rgba(139, 92, 246, 0.08);
+    transform: translateY(-2px) translateZ(10px);
+    box-shadow:
+        0 2px 4px rgba(0,0,0,0.3),
+        0 8px 16px rgba(0,0,0,0.2),
+        0 16px 40px rgba(0,0,0,0.12),
+        0 0 0 1px rgba(139, 92, 246, 0.1),
+        0 0 20px rgba(139, 92, 246, 0.05);
 }
 
-/* --- User Message (3D gradient) --- */
+/* --- User message (3D floating gradient) --- */
 .user-message {
     align-self: flex-end;
     flex-direction: row-reverse;
@@ -474,21 +526,36 @@ body {
     border-radius: 16px 4px 16px 16px;
     padding: 14px 16px;
     color: #fff;
-    box-shadow: 
-        0 2px 4px rgba(124, 58, 237, 0.3),
-        0 8px 20px rgba(124, 58, 237, 0.15),
-        inset 0 1px 0 rgba(255,255,255,0.1);
-    transition: all 0.25s ease;
+    position: relative;
+    box-shadow:
+        0 2px 4px rgba(124, 58, 237, 0.4),
+        0 8px 20px rgba(124, 58, 237, 0.2),
+        0 16px 40px rgba(124, 58, 237, 0.1),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    transition: all 0.3s var(--ease-spring);
+    transform: translateZ(0);
+}
+
+/* Shine effect on user message */
+.user-message .msg-bubble::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    border-radius: 16px 4px 0 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
+    pointer-events: none;
 }
 
 .user-message .msg-bubble:hover {
-    transform: translateY(-1px);
-    box-shadow: 
-        0 4px 8px rgba(124, 58, 237, 0.35),
-        0 12px 28px rgba(124, 58, 237, 0.2);
+    transform: translateY(-2px) translateZ(10px);
+    box-shadow:
+        0 4px 8px rgba(124, 58, 237, 0.45),
+        0 14px 32px rgba(124, 58, 237, 0.25),
+        0 20px 50px rgba(124, 58, 237, 0.12);
 }
 
-/* Message content styling */
+/* Bubble content */
 .msg-bubble {
     font-size: 0.88rem;
     line-height: 1.65;
@@ -498,22 +565,18 @@ body {
 
 .msg-bubble p { margin-bottom: 6px; }
 .msg-bubble p:last-child { margin-bottom: 0; }
-
 .msg-bubble strong { color: #fff; font-weight: 600; }
 
 .msg-bubble a {
     color: var(--cyan);
     text-decoration: none;
     border-bottom: 1px dashed rgba(6, 182, 212, 0.3);
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
 }
-.msg-bubble a:hover {
-    border-bottom-style: solid;
-    border-bottom-color: var(--cyan);
-}
+.msg-bubble a:hover { border-bottom-color: var(--cyan); border-bottom-style: solid; }
 
 /* ============================================
-   Source Badges (3D pill)
+   SOURCE BADGES
    ============================================ */
 
 .source-badge {
@@ -527,7 +590,7 @@ body {
     padding: 3px 9px;
     border-radius: 20px;
     margin-top: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 .source-wikipedia {
@@ -535,13 +598,11 @@ body {
     color: var(--blue);
     border: 1px solid rgba(99, 102, 241, 0.2);
 }
-
 .source-web {
     background: rgba(6, 182, 212, 0.1);
     color: var(--cyan);
     border: 1px solid rgba(6, 182, 212, 0.2);
 }
-
 .source-error {
     background: rgba(239, 68, 68, 0.1);
     color: var(--red);
@@ -549,7 +610,7 @@ body {
 }
 
 /* ============================================
-   3D Suggestion Chips
+   3D SUGGESTION CHIPS
    ============================================ */
 
 .suggestion-chips {
@@ -572,31 +633,45 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    transition: all 0.3s var(--ease-spring);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transform: translateZ(0);
+    transition: all 0.35s var(--ease-spring);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
 }
 
-.chip-icon {
-    font-size: 0.85rem;
+.chip-icon { font-size: 0.85rem; }
+
+/* Shine sweep on hover */
+.chip-3d::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; right: 0; bottom: 0;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s ease;
+}
+
+.chip-3d:hover::before {
+    left: 100%;
 }
 
 .chip-3d:hover {
     background: var(--gradient-main);
     color: #fff;
     border-color: transparent;
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 
-        0 4px 12px var(--glow-purple),
-        0 8px 24px rgba(139, 92, 246, 0.15);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow:
+        0 6px 16px rgba(139, 92, 246, 0.3),
+        0 12px 32px rgba(139, 92, 246, 0.12);
 }
 
 .chip-3d:active {
-    transform: translateY(0) scale(0.97);
+    transform: translateY(0) scale(0.95);
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
 }
 
 /* ============================================
-   Typing Indicator
+   TYPING INDICATOR — Bouncing 3D dots
    ============================================ */
 
 .typing-indicator {
@@ -606,9 +681,7 @@ body {
     padding: 0 20px 12px;
 }
 
-.typing-indicator.visible {
-    display: flex;
-}
+.typing-indicator.visible { display: flex; }
 
 .typing-bubble {
     display: flex;
@@ -618,26 +691,33 @@ body {
     background: var(--bg-elevated);
     border: 1px solid var(--border-subtle);
     border-radius: 4px 16px 16px 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
 
 .typing-bubble .dot {
-    width: 7px; height: 7px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--purple);
-    animation: dot-bounce 1.4s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+    animation: dot-3d-bounce 1.4s ease-in-out infinite;
 }
 
-.typing-bubble .dot:nth-child(2) { animation-delay: 0.15s; }
-.typing-bubble .dot:nth-child(3) { animation-delay: 0.3s; }
+.typing-bubble .dot:nth-child(2) { animation-delay: 0.15s; background: var(--blue); box-shadow: 0 0 8px rgba(99, 102, 241, 0.4); }
+.typing-bubble .dot:nth-child(3) { animation-delay: 0.3s; background: var(--cyan); box-shadow: 0 0 8px rgba(6, 182, 212, 0.4); }
 
-@keyframes dot-bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
-    30% { transform: translateY(-8px); opacity: 1; }
+@keyframes dot-3d-bounce {
+    0%, 60%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.35;
+    }
+    30% {
+        transform: translateY(-10px) scale(1.3);
+        opacity: 1;
+    }
 }
 
 /* ============================================
-   3D Input Area
+   3D INPUT AREA
    ============================================ */
 
 .chat-input-area {
@@ -655,18 +735,18 @@ body {
     border: 1px solid var(--border-subtle);
     border-radius: 14px;
     padding: 5px 5px 5px 18px;
-    transition: all 0.3s ease;
-    box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.15),
+    transition: all 0.35s ease;
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,0.2),
         0 1px 0 rgba(255,255,255,0.02);
 }
 
 .input-3d:focus-within {
     border-color: var(--border-active);
-    box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.15),
-        0 0 0 3px rgba(139, 92, 246, 0.08),
-        0 0 20px rgba(139, 92, 246, 0.06);
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,0.2),
+        0 0 0 3px rgba(139, 92, 246, 0.1),
+        0 0 25px rgba(139, 92, 246, 0.08);
 }
 
 #messageInput {
@@ -685,7 +765,7 @@ body {
 
 /* --- 3D Send Button --- */
 .send-btn-3d {
-    width: 40px; height: 40px; min-width: 40px;
+    width: 42px; height: 42px; min-width: 42px;
     border-radius: 12px;
     border: none;
     background: var(--gradient-main);
@@ -694,41 +774,43 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s var(--ease-spring);
-    box-shadow: 
-        0 2px 4px rgba(139, 92, 246, 0.3),
-        0 6px 16px rgba(139, 92, 246, 0.15),
-        inset 0 1px 0 rgba(255,255,255,0.15);
     position: relative;
+    overflow: hidden;
+    transition: all 0.3s var(--ease-spring);
+    box-shadow:
+        0 2px 4px rgba(139, 92, 246, 0.4),
+        0 6px 16px rgba(139, 92, 246, 0.2),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -2px 0 rgba(0,0,0,0.15);
 }
 
+/* Glass shine on top */
 .send-btn-3d::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
     pointer-events: none;
 }
 
 .send-btn-3d:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 
-        0 4px 8px rgba(139, 92, 246, 0.4),
-        0 10px 28px rgba(139, 92, 246, 0.2);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow:
+        0 4px 8px rgba(139, 92, 246, 0.5),
+        0 12px 32px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
-.send-btn-3d:hover svg {
-    transform: rotate(-12deg) scale(1.05);
-}
-
-.send-btn-3d svg {
-    transition: transform 0.3s var(--ease-spring);
-}
+.send-btn-3d:hover svg { transform: rotate(-15deg) scale(1.1); }
+.send-btn-3d svg { transition: transform 0.3s var(--ease-spring); }
 
 .send-btn-3d:active {
-    transform: translateY(1px) scale(0.95);
-    box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
+    transform: translateY(1px) scale(0.93);
+    box-shadow:
+        0 1px 2px rgba(139, 92, 246, 0.4),
+        inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* --- Footer --- */
@@ -747,36 +829,26 @@ body {
     width: 4px; height: 4px;
     border-radius: 50%;
     background: var(--purple);
-    opacity: 0.4;
+    opacity: 0.5;
+    animation: dot-pulse 2s ease-in-out infinite;
 }
 
-/* --- Welcome message (no entrance anim) --- */
-.welcome-msg {
-    opacity: 1;
-    animation: none;
-}
+/* Welcome msg no entrance animation */
+.welcome-msg { opacity: 1; animation: none; }
 
 /* ============================================
-   Responsive
+   RESPONSIVE
    ============================================ */
 
 @media (max-width: 540px) {
-    .chat-card {
-        transform: none;
-    }
-    .chat-card:hover {
-        transform: none;
-    }
+    .chat-card { transform: none !important; }
     .chat-container {
-        max-width: 100%;
-        width: 100%;
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
-        border: none;
+        max-width: 100%; width: 100%;
+        height: 100vh; max-height: 100vh;
+        border-radius: 0; border: none;
     }
     .chat-card-glow { display: none; }
-    .orb { opacity: 0.15; }
+    .orb { opacity: 0.2; }
     .chat-header { padding: 14px 16px; }
     .chat-messages { padding: 16px; gap: 12px; }
     .chat-input-area { padding: 12px 16px 10px; }
