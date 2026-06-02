@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartBot - AI-powered chatbot with web search capabilities. Ask any question and get instant answers.">
+    <title>SmartBot - AI Chatbot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Animated mesh background -->
+    <div class="bg-mesh"></div>
+    <div class="bg-grid"></div>
+
+    <div class="app-container">
+        <!-- Floating 3D orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+
+        <!-- Main chat card with 3D depth -->
+        <div class="chat-card">
+            <div class="chat-card-glow"></div>
+            <div class="chat-container" id="chatContainer">
+                
+                <!-- Header -->
+                <div class="chat-header">
+                    <div class="header-left">
+                        <div class="bot-avatar-3d">
+                            <div class="avatar-ring"></div>
+                            <div class="avatar-ring ring-2"></div>
+                            <div class="avatar-core">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2a4 4 0 0 1 4 4v2h1a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"/>
+                                    <circle cx="9" cy="14" r="1.5" fill="currentColor"/>
+                                    <circle cx="15" cy="14" r="1.5" fill="currentColor"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="header-info">
+                            <h1>SmartBot<span class="badge-ai">AI</span></h1>
+                            <div class="status-bar">
+                                <span class="status-dot-3d"></span>
+                                <span class="status-text">Online</span>
+                                <span class="divider">|</span>
+                                <span class="status-text">Web Search Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <button class="icon-btn" id="clearBtn" title="Clear chat">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages area -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome message -->
+                    <div class="message bot-message welcome-msg">
+                        <div class="msg-avatar">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a4 4 0 0 1 4 4v2h1a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"/>
+                                <circle cx="9" cy="14" r="1.5" fill="currentColor"/>
+                                <circle cx="15" cy="14" r="1.5" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="msg-bubble">
+                            <p>Hey! I'm <strong>SmartBot</strong> -- your AI assistant.</p>
+                            <p>I can answer questions, search the web, do math, and more. Try asking me anything!</p>
+                            <div class="suggestion-chips">
+                                <button class="chip-3d" onclick="sendSuggestion('What is artificial intelligence?')">
+                                    <span class="chip-icon">&#x1F916;</span> What is AI?
+                                </button>
+                                <button class="chip-3d" onclick="sendSuggestion('Tell me about Python programming')">
+                                    <span class="chip-icon">&#x1F40D;</span> About Python
+                                </button>
+                                <button class="chip-3d" onclick="sendSuggestion('calculate 15 * 7 + 3')">
+                                    <span class="chip-icon">&#x1F4CA;</span> Do math
+                                </button>
+                                <button class="chip-3d" onclick="sendSuggestion('help')">
+                                    <span class="chip-icon">&#x2753;</span> What can you do?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="msg-avatar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a4 4 0 0 1 4 4v2h1a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"/>
+                            <circle cx="9" cy="14" r="1.5" fill="currentColor"/>
+                            <circle cx="15" cy="14" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="typing-bubble">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+
+                <!-- Input area -->
+                <div class="chat-input-area">
+                    <div class="input-3d">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            placeholder="Ask me anything..." 
+                            autocomplete="off"
+                            autofocus
+                        />
+                        <button class="send-btn-3d" id="sendBtn" title="Send message">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22,2 15,22 11,13 2,9"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="footer-info">
+                        <span class="footer-dot"></span>
+                        Powered by Wikipedia & Web Search
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

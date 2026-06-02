@@ -1,0 +1,5 @@
+flask
+wikipedia
+duckduckgo-search
+requests
+beautifulsoup4
